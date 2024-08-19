@@ -1,7 +1,4 @@
----
-title: "R Notebook"
-output: html_notebook
----
+# Bellabeat Case Study
 
 ## Background Information
 
@@ -48,7 +45,7 @@ common_files <- intersect(names1, names2)
 
 ```
 
-No I moved all the uniqye
+No I moved all the unique files into the work folder so that further analysis can be done
 
 ```{r}
 library(dplyr)
@@ -69,9 +66,7 @@ for (file in common_files) {
   # Save the merged file
   write.csv(merged_df, file.path("/cloud/project/archive", file), row.names = FALSE)
 }
-```
 
-```{r}
 # Define the paths to the two folders
 folder1 <- "/cloud/project/archive/Fitabase Data 3.12.16-4.11.16"
 folder2 <- "/cloud/project/archive/Fitabase Data 4.12.16-5.12.16"
@@ -100,3 +95,64 @@ for (file in unique_files) {
   file.remove(file2_path)
 }
 ```
+
+Now lets start the analysis
+
+## Data Preparation
+
+1.  load packages
+
+```{r}
+library(tidyverse)
+library(ggplot2)
+library(lubridate)
+library(lm.beta)
+```
+
+. Load CSV files containing our data
+
+```{r}
+# set working directory
+setwd("~/Downloads/8548186/archive")
+# load files
+daily_activity <- read.csv("dailyActivity_merged.csv")
+hourly_steps <- read.csv("hourlySteps_merged.csv")
+daily_sleep <- read.csv("sleepDay_merged.csv")
+weight <- read.csv("weightLogInfo_merged.csv")
+```
+
+3.  Identify number of participants in each data set by counting distinct IDs
+
+```{r}
+n_distinct(daily_activity$Id)
+```
+
+```{r}
+n_distinct(hourly_steps$Id)
+```
+
+```{r}
+n_distinct(daily_sleep$Id)
+```
+
+```{r}
+n_distinct(weight$Id)
+```
+
+4.  View and clean up the data sets
+```{r}
+
+# First, the daily_sleep data
+head(daily_sleep)
+
+```
+```{r}
+# The 12:00:00 AM time stamp on each observation is redundant so we should remove it to make the data easier to work with
+daily_sleep$SleepDay <- (gsub('12:00:00 AM', '', daily_sleep$SleepDay))
+# Renaming column
+colnames(daily_sleep)[2] = "Date"
+# View updated data
+head(daily_sleep)
+```
+
+
