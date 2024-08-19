@@ -1,3 +1,9 @@
+---
+title: "Bellabeat Case Study"
+output: md_document
+
+---
+
 # Bellabeat Case Study
 
 ## Background Information
